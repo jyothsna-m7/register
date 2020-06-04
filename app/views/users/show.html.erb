@@ -47,10 +47,10 @@ th, td {
     </tr>
     <% @user.events.each do |event| %>
       <tr>
-        <td> <%= clock_in_pretty(event) %> </td>
+        <td> <%= event.clock_in %> </td>
         <td> 
           <% if event.clock_out.present? %>
-            <%= clock_out_pretty(event) %> 
+            <%= event.clock_out %> 
             <p> Or, do you want to edit? </p>
           <% else %>
             <%= button_to 'Clock - Out now', { action: 'update', controller: 'events', user_id: @user.id, id: event.id }, method: :put %>
