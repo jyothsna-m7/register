@@ -11,7 +11,6 @@ class Event < ApplicationRecord
   default_scope { order('clock_in desc') }
 
   scope :today, -> { where(clock_in: Date.today.beginning_of_day..Date.today.end_of_day).order('clock_out desc') }
-  # scope :old, -> { where('clock_in < ?', Date.today.end_of_day).order('clock_out desc') }
 
   scope :pending, -> { where('clock_out is null') }
 
@@ -30,7 +29,7 @@ class Event < ApplicationRecord
   def no_overlap?
     last_event = user.events.first
 
-    return true if last_event.clock_out.nil? || last_event.clock_out < clock_in
+    return true if last_event.nil? || last_event.clock_out.nil? || last_event.clock_out < clock_in
 
     errors['clock_in'] << 'time is overlapping with old events'
     false
@@ -52,24 +51,32 @@ class Event < ApplicationRecord
     overlap_pending = user.events.where('clock_in < ? AND clock_out is null', clock_out)
 
     if overlap_window.empty?
-      valid_clock_out = true
+      valid_window = true
     elsif overlap_window.size == 1 && overlap_window.first.id == id
+      valid_window = true
+    else
+      valid_window = false
+    end
+
+    if overlap_pending.empty?
+      valid_clock_out = true
+    elsif overlap_pending.size == 1 && overlap_pending.first.id == id
       valid_clock_out = true
     else
       valid_clock_out = false
     end
 
-    return true if valid_clock_out && overlap_pending.empty?
+    return true if valid_window && valid_clock_out
 
     errors['clock_out'] << 'time is overlapping with old events'
     false
   end
 
   def clock_in_now(now = nil)
-    update_attributes(clock_in: now || Time.now)
+    update_attributes(clock_in: now || Time.zone.now)
   end
 
   def clock_out_now(now = nil)
-    update_attributes(clock_out: now || Time.now)
+    update_attributes(clock_out: now || Time.zone.now)
   end
 end
