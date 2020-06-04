@@ -1,13 +1,8 @@
 # frozen_string_literal: true
 class EventsController < ApplicationController
-  # before_action :redirect_if_logged_in,   only: [:new, :create]
-  before_action :redirect_if_logged_out,  only: [:create]
-
-  def update; end
+  before_action :redirect_if_logged_out
 
   def create
-    byebug
-    puts 'haha'
     @user = User.find(params[:user_id])
     @event = @user.events.new
 
@@ -20,8 +15,6 @@ class EventsController < ApplicationController
   end
 
   def update
-    byebug
-    puts 'hehe'
     @event = Event.find(params[:id])
 
     if @event.clock_out_now(parsed_clock_out)
@@ -33,7 +26,6 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    byebug
     @event = Event.find(params[:id])
 
     if @event.destroy
