@@ -33,10 +33,6 @@ th, td {
       <%= time_select 'clock_in', 'clock_in' %>
       <%= submit_tag %>
     <% end %>
-    <!-- < %= form_for @event do |f| %>
-      < %= f.time_select 'clock_out' :clock_out %>
-      < %= f.submit 'Select custom time' %>
-    < % end %> -->
   </div>
 <% end %>
 </br>
@@ -47,8 +43,9 @@ th, td {
     <tr> 
       <th> Clock- In </th>
       <th> Clock- Out </th>
+      <th></th>
     </tr>
-    <% @user.events.today.each do |event| %>
+    <% @user.events.each do |event| %>
       <tr>
         <td> <%= clock_in_pretty(event) %> </td>
         <td> 
@@ -62,7 +59,7 @@ th, td {
           
 
           <%= form_tag("/user/#{@user.id}/events/#{event.id}", method: :put) do %>
-            <%= time_select 'clock_out', 'clock_out' %>
+            <%= datetime_select 'clock_out', 'clock_out' %>
             <%= submit_tag %>
           <% end %>
           
@@ -74,24 +71,3 @@ th, td {
     <% end %>
   </table>
 <% end %>
-
-</br>
-</br>
-<% if @user.events.old.present?  %>
-  <h3> All Other events </h3>
-  <table style="width:400px">
-    <tr> 
-      <th> Clock- In </th>
-      <th> Clock- Out </th>
-    </tr>
-    <% @user.events.old.each do |event| %>
-      <tr>
-        <td> <%= clock_in_pretty(event) %> </td>
-        <td> <%= clock_out_pretty(event) %> </td>
-      </tr>
-    <% end %>
-  </table>
-<% end %>
-
-
-

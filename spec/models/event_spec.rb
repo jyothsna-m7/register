@@ -3,6 +3,7 @@ require 'rails_helper'
 
 RSpec.describe Event, type: :model do
   let!(:user) { FactoryBot.create(:user) }
+  let!(:user1) { FactoryBot.create(:user) }
   let!(:event) { FactoryBot.create(:event, user: user, clock_in: Faker::Time.backward(days: 2), clock_out: nil) }
 
   context 'associations' do
@@ -16,6 +17,10 @@ RSpec.describe Event, type: :model do
   context 'ActiveRecord validations' do
     it 'user should be present' do
       expect(FactoryBot.build(:event, user: nil)).to_not be_valid
+    end
+
+    it 'clock_in should be present' do
+      expect(FactoryBot.build(:event, user: user1, clock_in: nil)).to_not be_valid
     end
 
     it 'clock_in time cant be in futue' do

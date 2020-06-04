@@ -5,27 +5,33 @@ class SessionsController < ApplicationController
   def new; end
 
   def create
-    @user = User.where('lower(name) = ?', session_params[:name]).first
+    @user = User.find_or_initialize_by(name: sanitize_params)
 
-    if @user
+    if @user.save
       session[:user_id] = @user.id
       flash[:success] = 'You are logged in'
       redirect_to user_path
     else
       flash[:error] = 'Failed to log in, please try again'
-      redirect_to new_session_path
+      render :new
     end
   end
 
   def destroy
-    byebug
     session[:user_id] = nil
-    flash[:success] = "You are now logged out"
-    redirect_to new_session_path
+    flash[:success] = 'You are now logged out'
+    render :new
   end
 
   private
-  def session_params
+
+  def sanitize_params
+    # FIXME: Move this logic to resuable string method
+    permit_params
+    params[:name].downcase.squish
+  end
+
+  def permit_params
     params.permit(:name)
   end
 end
