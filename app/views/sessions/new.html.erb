@@ -1,0 +1,12 @@
+<h1> Hello </h1>
+
+<% if flash[:error] %>
+  <div class="error"><%= 'Error! ' + flash[:error] %> </div>
+<% end %>
+</br>
+<%= form_with(model: @user, url: user_path) do |f| %>
+	<%= f.text_field :name, minlength: 4, maxlength: 10, size: 20, required: true %>
+  </br>
+  </br>
+  <%= submit_tag('Login') %>
+<% end %>

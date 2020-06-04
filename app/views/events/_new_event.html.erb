@@ -1,0 +1,16 @@
+<h1> New Event </h1>
+
+<% if flash[:error] %>
+  <div class="error"><%= 'Error! ' + flash[:error] %> </div>
+<% end %>
+</br>
+
+<%= form_for(@event) do |f| %>
+  <p>
+    <b>Clock IN</b><br>
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>

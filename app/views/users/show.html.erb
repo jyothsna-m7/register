@@ -1,0 +1,97 @@
+<%= link_to "Logout", session_path(@user), method: :delete, data: { confirm: 'Are you sure you want to Logout?' } %>
+
+
+<p> Welcome <%= @user.name.titleize %> </p>
+
+</br>
+<div>
+  <% if flash[:error].present? %>
+    <p style="color:red"> <%= flash[:error] %> </p>
+  <% elsif flash[:success].present? %>
+    <p style="color:green"> <%= flash[:success] %> </p>
+  <% end %>
+</div>
+
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 10px;
+}
+</style>
+
+<h3> Today's events </h3>
+<% if @user.events.pending.empty? %>
+  <%= button_to 'Clock in now', { action: 'create', controller: 'events', user_id: @user.id }, method: :post %>
+</br>
+ <div> or choose custom time </div>
+</br>
+  <div> 
+    <%= form_tag(action: 'create', controller: 'events', user_id: @user.id) do %>
+      <%= time_select 'clock_in', 'clock_in' %>
+      <%= submit_tag %>
+    <% end %>
+    <!-- < %= form_for @event do |f| %>
+      < %= f.time_select 'clock_out' :clock_out %>
+      < %= f.submit 'Select custom time' %>
+    < % end %> -->
+  </div>
+<% end %>
+</br>
+</br>
+
+<% if @user.events.present?  %>
+  <table style="width:400px">
+    <tr> 
+      <th> Clock- In </th>
+      <th> Clock- Out </th>
+    </tr>
+    <% @user.events.today.each do |event| %>
+      <tr>
+        <td> <%= clock_in_pretty(event) %> </td>
+        <td> 
+          <% if event.clock_out.present? %>
+            <%= clock_out_pretty(event) %> 
+            <p> Or, do you want to edit? </p>
+          <% else %>
+            <%= button_to 'Clock - Out now', { action: 'update', controller: 'events', user_id: @user.id, id: event.id }, method: :put %>
+            <p> Or, choose custom time? </p>
+          <% end %>
+          
+
+          <%= form_tag("/user/#{@user.id}/events/#{event.id}", method: :put) do %>
+            <%= time_select 'clock_out', 'clock_out' %>
+            <%= submit_tag %>
+          <% end %>
+          
+        </td>
+        <td>
+          <%= button_to 'Delete', { action: 'destroy', controller: 'events', user_id: @user.id, id: event.id }, method: :delete %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+</br>
+</br>
+<% if @user.events.old.present?  %>
+  <h3> All Other events </h3>
+  <table style="width:400px">
+    <tr> 
+      <th> Clock- In </th>
+      <th> Clock- Out </th>
+    </tr>
+    <% @user.events.old.each do |event| %>
+      <tr>
+        <td> <%= clock_in_pretty(event) %> </td>
+        <td> <%= clock_out_pretty(event) %> </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+
+
