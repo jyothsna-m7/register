@@ -6,7 +6,7 @@ To test:
 
 2) Start adding events
 
-3) As UI is not intuitive, please look for red/ green flash messages on top of the page
+3) As UI is not intuitive, please look for red/ green flash messages on top of the page and note that times are UTC
 
 
 How did you approach this challenge?
@@ -46,5 +46,9 @@ If you were given another month to work on this, how would you spend it?
 4) Have trail of edits made
 5) Make it into API that can be used for any mobile app.
 
+I would definitely want to change, but time did not permit:
+===========================================================
+1) Put Time zone to EDT on Heroku! You can see from my commits that I tried. But there is a discrepancy with Heroku server time. This is one best reason of using a docker for catching these kind of server setup issues.
 
-
+2) Not happy using default_scope on order by events desc even though small app like this should not see any difference
+3) write more test cases
