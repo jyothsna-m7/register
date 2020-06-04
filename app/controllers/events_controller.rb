@@ -45,12 +45,12 @@ class EventsController < ApplicationController
   def parsed_clock_in
     return unless params[:clock_in].present?
 
-    Time.new(*params[:clock_in].values).in_time_zone
+    Time.new(*params[:clock_in].values)
   end
 
   def parsed_clock_out
     return unless params[:clock_out].present?
 
-    Time.new(*params[:clock_out].values).in_time_zone
+    Time.new(*params[:clock_out].values)
   end
 end
